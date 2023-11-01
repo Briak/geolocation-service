@@ -5,6 +5,7 @@ import android.webkit.URLUtil
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
+import com.kristinaefros.challenge.BuildConfig
 
 
 fun ImageView.setImageUri(uri: String?) {
@@ -13,7 +14,7 @@ fun ImageView.setImageUri(uri: String?) {
         if (URLUtil.isValidUrl(uri)) {
             Glide.with(this).load(uri).into(this)
         } else {
-//            Glide.with(this).load(Uri.parse(uri)).signature(ObjectKey(BuildConfig.VERSION_CODE)).into(this)
+            Glide.with(this).load(Uri.parse(uri)).signature(ObjectKey(BuildConfig.VERSION_CODE)).into(this)
         }
     } else {
         this.setImageDrawable(null)

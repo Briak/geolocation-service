@@ -1,5 +1,6 @@
 package com.kristinaefros.challenge.presentation.places
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kristinaefros.challenge.databinding.FragmentPlacesBinding
+import com.kristinaefros.challenge.presentation.location_service.LocationService
+import com.kristinaefros.challenge.presentation.main.MainActivity
 import com.kristinaefros.challenge.presentation.places.binder.PlacesAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,9 +35,19 @@ class PlacesFragment: Fragment() {
         viewModel.subscribe()
 
         binding.apply {
-            stopButton.setOnClickListener { viewModel.stop() }
+            stopButton.setOnClickListener {
+                Intent(requireContext().applicationContext, LocationService::class.java).apply {
+                    action = LocationService.ACTION_STOP
+                    requireActivity().startService(this)
+                }
+//                (requireActivity() as MainActivity).stopLocationService()
+                viewModel.stop()
+            }
 
-            placesList.layoutManager = LinearLayoutManager(requireActivity())
+            placesList.layoutManager = LinearLayoutManager(requireActivity()).apply {
+                stackFromEnd = true
+                reverseLayout = true
+            }
             placesList.adapter = placesAdapter
         }
 
@@ -44,7 +57,9 @@ class PlacesFragment: Fragment() {
     override fun onDestroyView() {
         viewModel.apply {
             screenData.removeObservers(viewLifecycleOwner)
+            unsubscribe()
         }
+        binding.placesList.adapter = null
         _binding = null
         super.onDestroyView()
     }

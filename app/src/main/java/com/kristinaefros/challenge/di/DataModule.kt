@@ -3,9 +3,11 @@ package com.kristinaefros.challenge.di
 
 import com.kristinaefros.challenge.data.preference.AppPreferences
 import com.kristinaefros.challenge.data.repository.auth.AuthRepositoryImpl
+import com.kristinaefros.challenge.data.repository.photos.PhotosRepositoryImpl
 import com.kristinaefros.challenge.data.repository.places.PlacesRepositoryImpl
 import com.kristinaefros.challenge.data.storage.AppStorage
 import com.kristinaefros.challenge.domain.auth.AuthRepository
+import com.kristinaefros.challenge.domain.photos.PhotosRepository
 import com.kristinaefros.challenge.domain.places.PlacesRepository
 import org.koin.dsl.module
 
@@ -16,5 +18,6 @@ object DataModule {
         single { AppStorage(get()) }
         single<AuthRepository> { AuthRepositoryImpl(get()) }
         single<PlacesRepository> { PlacesRepositoryImpl(get()) }
+        single<PhotosRepository> { PhotosRepositoryImpl(get()) }
     }
 }
