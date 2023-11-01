@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kristinaefros.challenge.databinding.FragmentPlacesBinding
+import com.kristinaefros.challenge.presentation.places.binder.PlacesAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlacesFragment: Fragment() {
@@ -13,6 +15,7 @@ class PlacesFragment: Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: PlacesViewModel by viewModel()
+    private val placesAdapter = PlacesAdapter()
 
     companion object {
         fun newInstance() = PlacesFragment()
@@ -26,16 +29,27 @@ class PlacesFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.subscribe()
+
         binding.apply {
             stopButton.setOnClickListener { viewModel.stop() }
+
+            placesList.layoutManager = LinearLayoutManager(requireActivity())
+            placesList.adapter = placesAdapter
         }
+
+        viewModel.screenData.observe(viewLifecycleOwner) { render(it) }
     }
 
     override fun onDestroyView() {
         viewModel.apply {
-//            screenData.removeObservers(viewLifecycleOwner)
+            screenData.removeObservers(viewLifecycleOwner)
         }
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun render(screenUiModel: ScreenUiModel) {
+        placesAdapter.setData(screenUiModel.placeUiModels)
     }
 }

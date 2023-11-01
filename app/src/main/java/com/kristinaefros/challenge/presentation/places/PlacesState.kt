@@ -1,4 +1,18 @@
 package com.kristinaefros.challenge.presentation.places
 
-class PlacesState {
+import com.kristinaefros.challenge.domain.places.PlaceModel
+import com.kristinaefros.challenge.presentation.places.binder.PlaceUiModel
+
+data class PlacesState(
+    val loading: Boolean = false,
+    val placeModels: List<PlaceModel> = emptyList(),
+) {
+    val screenUiModel = ScreenUiModel(loading, placeModels)
+}
+
+data class ScreenUiModel(
+    val loading: Boolean = false,
+    val placeModels: List<PlaceModel> = emptyList(),
+) {
+    val placeUiModels = placeModels.map { place -> PlaceUiModel(place) }
 }

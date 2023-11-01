@@ -68,6 +68,9 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+
     // Room
     implementation "com.orhanobut:hawk:2.0.1"
     implementation 'androidx.room:room-ktx:2.6.0'

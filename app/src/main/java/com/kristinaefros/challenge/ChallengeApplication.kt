@@ -8,6 +8,7 @@ import com.kristinaefros.challenge.di.ViewModelModule
 import com.orhanobut.hawk.Hawk
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 
 class ChallengeApplication : Application() {
@@ -23,10 +24,7 @@ class ChallengeApplication : Application() {
     private fun setupLogging() {
 //        if (BuildConfig.DEBUG) {
 //            Timber.plant(Timber.DebugTree())
-//        } else {
-//            Timber.plant(CrashlyticsTree())
 //        }
-//        Timber.plant(FileLoggingTree(this))
     }
 
     private fun initHawk() {
