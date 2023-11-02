@@ -41,7 +41,7 @@ class DefaultLocationClient(
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {
                     super.onLocationResult(result)
-                    result.locations.lastOrNull()?.let { location ->
+                    result.locations.firstOrNull()?.let { location ->
                         launch { send(location) }
                     }
                 }
@@ -53,9 +53,7 @@ class DefaultLocationClient(
                 Looper.getMainLooper(),
             )
 
-            awaitClose {
-                client.removeLocationUpdates(locationCallback)
-            }
+            awaitClose { client.removeLocationUpdates(locationCallback) }
         }
     }
 }

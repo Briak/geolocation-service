@@ -35,14 +35,7 @@ class PlacesFragment: Fragment() {
         viewModel.subscribe()
 
         binding.apply {
-            stopButton.setOnClickListener {
-                Intent(requireContext().applicationContext, LocationService::class.java).apply {
-                    action = LocationService.ACTION_STOP
-                    requireActivity().startService(this)
-                }
-//                (requireActivity() as MainActivity).stopLocationService()
-                viewModel.stop()
-            }
+            stopButton.setOnClickListener { viewModel.stop() }
 
             placesList.layoutManager = LinearLayoutManager(requireActivity()).apply {
                 stackFromEnd = true

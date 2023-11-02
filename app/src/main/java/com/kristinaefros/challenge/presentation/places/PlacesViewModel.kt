@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 
 class PlacesViewModel(
     private val authInteractor: AuthInteractor,
@@ -40,7 +41,7 @@ class PlacesViewModel(
         try {
             authInteractor.stopSession()
         } catch (error: Exception) {
-
+            Timber.e(error)
         }
     }
 }

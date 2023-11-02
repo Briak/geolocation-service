@@ -3,6 +3,7 @@ package com.kristinaefros.challenge.presentation.start
 import com.kristinaefros.challenge.domain.auth.AuthInteractor
 import com.kristinaefros.challenge.domain.auth.AuthModel
 import com.kristinaefros.challenge.presentation.common.BaseViewModel
+import timber.log.Timber
 
 class StartViewModel(
     private val authInteractor: AuthInteractor,
@@ -12,7 +13,7 @@ class StartViewModel(
         try {
             authInteractor.startSession(AuthModel("random string"))
         } catch (error: Exception) {
-
+            Timber.e(error)
         }
     }
 }

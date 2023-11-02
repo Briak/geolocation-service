@@ -1,11 +1,7 @@
 package com.kristinaefros.challenge.presentation.main
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import com.kristinaefros.challenge.databinding.ActivityMainBinding
 import com.kristinaefros.challenge.presentation.common.navigation.Navigator
@@ -18,22 +14,6 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModel()
     private lateinit var navigator: Navigator
 
-    private lateinit var locationService: LocationService
-    private val locationServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as LocationService.LocationBinder
-            locationService = binder.getService()
-            locationService.userLocationEvent.observe(this@MainActivity) { placeQuery ->
-                viewModel.createPlace(placeQuery)
-            }
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-//            locationService.userLocationEvent.removeObservers(this@MainActivity)
-        }
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,13 +25,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.apply {
             subscribe()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        val intentBind = Intent(this, LocationService::class.java)
-        bindService(intentBind, locationServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onResume() {
@@ -68,12 +41,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        unbindService(locationServiceConnection)
-    }
-
     override fun onDestroy() {
         viewModel.apply {
             unsubscribe()
@@ -83,8 +50,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun render(state: AuthStateModel) {
         when (state) {
-            is AuthStateModel.Authorized -> navigator.openPlacesScreen()
-            else -> navigator.openStartScreen()
+            is AuthStateModel.Authorized -> {
+                startLocationServiceWithAction(LocationService.ACTION_START)
+                navigator.openPlacesScreen()
+            }
+            else -> {
+                startLocationServiceWithAction(LocationService.ACTION_STOP)
+                navigator.openStartScreen()
+            }
+        }
+    }
+
+    private fun startLocationServiceWithAction(serviceAction: String) {
+        Intent(applicationContext, LocationService::class.java).apply {
+            action = serviceAction
+            startService(this)
         }
     }
 }

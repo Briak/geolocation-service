@@ -15,7 +15,7 @@ data class ScreenUiModel(
     val placeModels: List<PlaceModel> = emptyList(),
 ) {
     val placeUiModels = placeModels
-        .filter { place -> place.photoUrl != null }
+//        .filter { place -> place.photoUrl != null }
         .map { place -> PlaceUiModel(place) }
         .sortedBy { place -> place.id }
 }
