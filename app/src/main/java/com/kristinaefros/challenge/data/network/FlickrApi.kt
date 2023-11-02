@@ -15,8 +15,7 @@ interface FlickrApi {
         @Query("per_page") perPage: Int = 1,
         @Query("format") format: String = "json",
         @Query("nojsoncallback") nojsoncallback: Int = 1,
-        @Query("radius") radius: Int = 1,
-//        @Query("geo_context") geoContext: Int = 2,
+        @Query("radius") radius: Float,
         @Query("lon") longitude: Double,
         @Query("lat") latitude: Double,
     ): SearchPhotosResponse

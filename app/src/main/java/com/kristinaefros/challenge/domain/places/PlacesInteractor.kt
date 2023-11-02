@@ -10,7 +10,7 @@ class PlacesInteractor(
     fun observePlaces(): Flow<List<PlaceModel>> = placesRepository.observe()
     suspend fun createPlace(query: PlaceQueryModel) {
         val place = placesRepository.create(query)
-        val photo = photosInteractor.searchPhoto(place.latitude, place.longitude)
+        val photo = photosInteractor.searchPhoto(place.latitude, place.longitude, place.radius)
         if (photo != null) {
             addPhotoToPlace(place.id, photo.url)
         }

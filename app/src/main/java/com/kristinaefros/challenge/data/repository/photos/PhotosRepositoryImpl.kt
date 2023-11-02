@@ -7,9 +7,9 @@ import com.kristinaefros.challenge.domain.photos.PhotosRepository
 class PhotosRepositoryImpl(
     private val flickrApi: FlickrApi,
 ): PhotosRepository {
-    override suspend fun search(latitude: Double, longitude: Double): PhotoModel? {
-        val photosResponse = flickrApi.searchPhotos(latitude = latitude, longitude = longitude)
-        val dto = photosResponse.photos.photo.firstOrNull()
+    override suspend fun search(latitude: Double, longitude: Double, radius: Float): PhotoModel? {
+        val photosResponse = flickrApi.searchPhotos(latitude = latitude, longitude = longitude, radius = radius)
+        val dto = photosResponse.photos?.photo?.firstOrNull()
         return PhotoMapper.mapFromDto(dto)
     }
 }

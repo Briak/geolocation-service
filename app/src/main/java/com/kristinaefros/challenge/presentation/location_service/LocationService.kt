@@ -58,16 +58,11 @@ class LocationService : Service(), KoinComponent {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         locationClient
-            .getLocationUpdates(10000L)
+            .getLocationUpdates(5000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
-                placesInteractor.createPlace(
-                    PlaceQueryModel(
-                        location.latitude,
-                        location.longitude,
-                        location.accuracy
-                    )
-                )
+                val radius = location.accuracy / 100
+                placesInteractor.createPlace(PlaceQueryModel(location.latitude, location.longitude, radius))
 
                 val lat = location.latitude.toString().takeLast(3)
                 val long = location.longitude.toString().takeLast(3)
