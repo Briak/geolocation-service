@@ -4,8 +4,6 @@ import androidx.lifecycle.asLiveData
 import com.kristinaefros.challenge.domain.auth.AuthInteractor
 import com.kristinaefros.challenge.domain.places.PlacesInteractor
 import com.kristinaefros.challenge.presentation.common.BaseViewModel
-import com.kristinaefros.challenge.presentation.common.SingleLiveEvent
-import com.kristinaefros.challenge.presentation.common.message.MessageEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -22,8 +20,6 @@ class PlacesViewModel(
         .map { it.screenUiModel }
         .asLiveData()
 
-    val messageEvent = SingleLiveEvent<MessageEntity>()
-
     fun subscribe() {
         placesInteractor.observePlaces()
             .onEach { places ->
@@ -36,6 +32,9 @@ class PlacesViewModel(
     fun unsubscribe() {
         disposeJobs()
     }
+
+    fun updatePermissionErrorState(show: Boolean) =
+        stateFlow.update { state -> state.copy(showPermissionError = show) }
 
     fun stop() = launch {
         try {

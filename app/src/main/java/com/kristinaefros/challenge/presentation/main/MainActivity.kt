@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         viewModel.apply {
+            startLocationServiceWithAction(LocationService.ACTION_STOP)
             unsubscribe()
         }
         super.onDestroy()
@@ -50,10 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun render(state: AuthStateModel) {
         when (state) {
-            is AuthStateModel.Authorized -> {
-                startLocationServiceWithAction(LocationService.ACTION_START)
-                navigator.openPlacesScreen()
-            }
+            is AuthStateModel.Authorized -> navigator.openPlacesScreen()
             else -> {
                 startLocationServiceWithAction(LocationService.ACTION_STOP)
                 navigator.openStartScreen()
