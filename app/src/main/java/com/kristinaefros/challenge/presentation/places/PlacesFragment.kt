@@ -35,7 +35,7 @@ class PlacesFragment : Fragment() {
     private val requestLocationLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) || isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                checkGeoLocationEnabled()
+                startLocationService()
             } else {
                 startLocationServiceWithAction(LocationService.ACTION_STOP)
                 viewModel.updatePermissionErrorState(true)
@@ -111,16 +111,15 @@ class PlacesFragment : Fragment() {
 
     private fun checkLocationPermissions() {
         when {
-            isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) -> checkGeoLocationEnabled()
-            isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION) -> checkGeoLocationEnabled()
+            isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) -> startLocationService()
+            isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION) -> startLocationService()
             requireActivity().shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     requireActivity().shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> showLocationRationale()
             else -> requestLocationPermissions()
         }
     }
 
-    private fun checkGeoLocationEnabled() {
-        //check if enabled
+    private fun startLocationService() {
         viewModel.updatePermissionErrorState(false)
         startLocationServiceWithAction(LocationService.ACTION_START)
     }

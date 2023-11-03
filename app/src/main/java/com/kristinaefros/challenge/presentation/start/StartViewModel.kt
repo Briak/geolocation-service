@@ -11,7 +11,7 @@ class StartViewModel(
 
     fun start() = launch {
         try {
-            authInteractor.startSession(AuthModel("random string"))
+            authInteractor.startSession(AuthModel("token"))
         } catch (error: Exception) {
             Timber.e(error)
         }

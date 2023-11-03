@@ -9,6 +9,8 @@ import com.kristinaefros.challenge.di.DataModule
 import com.kristinaefros.challenge.di.DomainModule
 import com.kristinaefros.challenge.di.NetworkModule
 import com.kristinaefros.challenge.di.ViewModelModule
+import com.kristinaefros.challenge.utils.extensions.Constants.locationChannelId
+import com.kristinaefros.challenge.utils.extensions.Constants.locationChannelName
 import com.orhanobut.hawk.Hawk
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -28,9 +30,9 @@ class ChallengeApplication : Application() {
 
     private fun initNotificationChannel() {
         val channel = NotificationChannel(
-            "location",
-            "location",
-            NotificationManager.IMPORTANCE_LOW
+            locationChannelId,
+            locationChannelName,
+            NotificationManager.IMPORTANCE_LOW,
         )
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)

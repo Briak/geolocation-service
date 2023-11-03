@@ -7,4 +7,6 @@
     <string name="PLACES_SCREEN_GRANT_LOCATION_PERMISSION_MESSAGE">You need to give location permission to this application to be able to collect photos during your journey.</string>
     <string name="GENERAL_OK">OK</string>
     <string name="GENERAL_NO">No</string>
+    <string name="LOCATION_SERVICE_TITLE">Location tracking…</string>
+    <string name="LOCATION_SERVICE_MESSAGE">Application is tracking your location to collect beautiful photos during your journey</string>
 </resources>
