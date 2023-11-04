@@ -30,7 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".presentation.location_service.LocationService" android:foregroundServiceType="location" />
+        <service
+            android:name=".presentation.location_service.LocationService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>

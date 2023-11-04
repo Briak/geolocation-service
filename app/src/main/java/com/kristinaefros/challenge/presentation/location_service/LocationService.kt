@@ -2,6 +2,8 @@ package com.kristinaefros.challenge.presentation.location_service
 
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationServices
@@ -54,10 +56,15 @@ class LocationService : Service(), KoinComponent {
             .setContentText(this.resources.getString(R.string.LOCATION_SERVICE_MESSAGE))
             .setSmallIcon(R.drawable.ic_location_notification)
             .setOngoing(true)
-        startForeground(1003, notification.build())
+            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            startForeground(1003, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        } else {
+            startForeground(1003, notification)
+        }
 
         locationClient
-            .getLocationUpdates(5000L)
+            .getLocationUpdates(10000L)
             .catch { error -> Timber.e(error) }
             .onEach { location ->
                 val radius = location.accuracy / 100

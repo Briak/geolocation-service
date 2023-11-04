@@ -34,7 +34,6 @@ class PlaceBinder : MultiTypeViewBinder<PlaceBinder.ViewHolder, PlaceUiModel> {
     override fun onBindViewHolder(holder: ViewHolder, uiModel: PlaceUiModel) {
         holder.binding.apply {
             placeImage.setImageUri(uiModel.photoUrl)
-            placeId.text = uiModel.id.toString()
         }
     }
 

@@ -1,7 +1,7 @@
 package com.kristinaefros.challenge.presentation.places
 
 import android.Manifest
-import android.app.NotificationManager
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -24,8 +24,8 @@ import com.kristinaefros.challenge.R
 import com.kristinaefros.challenge.databinding.FragmentPlacesBinding
 import com.kristinaefros.challenge.presentation.location_service.LocationService
 import com.kristinaefros.challenge.presentation.places.binder.PlacesAdapter
-import com.kristinaefros.challenge.utils.extensions.Constants.locationChannelId
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class PlacesFragment : Fragment() {
     private var _binding: FragmentPlacesBinding? = null
@@ -161,10 +161,10 @@ class PlacesFragment : Fragment() {
     private fun isPermissionGranted(permission: String) =
         ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
     private fun isLocationServiceRunning(): Boolean {
-        val manager = requireActivity().getSystemService(NotificationManager::class.java)
-        for (notification in manager.activeNotifications) {
-            if (notification.notification.channelId == locationChannelId) {
-                return true
+        val manager = requireActivity().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (LocationService::class.java.name.equals(service.service.className)) {
+                return service.foreground
             }
         }
         return false
