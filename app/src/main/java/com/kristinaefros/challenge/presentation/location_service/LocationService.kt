@@ -52,7 +52,7 @@ class LocationService : Service(), KoinComponent {
         val notification = NotificationCompat.Builder(this, locationChannelId)
             .setContentTitle(this.resources.getString(R.string.LOCATION_SERVICE_TITLE))
             .setContentText(this.resources.getString(R.string.LOCATION_SERVICE_MESSAGE))
-            .setSmallIcon(R.mipmap.ic_launcher_round)
+            .setSmallIcon(R.drawable.ic_location_notification)
             .setOngoing(true)
         startForeground(1003, notification.build())
 
