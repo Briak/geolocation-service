@@ -10,14 +10,14 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/permission_error"
+        android:id="@+id/error_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        android:text="@string/PLACES_SCREEN_GRANT_LOCATION_PERMISSION_MESSAGE"
         app:layout_constraintEnd_toStartOf="@id/stop_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/PLACES_SCREEN_GRANT_LOCATION_PERMISSION_MESSAGE" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/stop_button"

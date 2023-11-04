@@ -1,8 +1,13 @@
 package com.kristinaefros.challenge.presentation.places
 
 import android.Manifest
+import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +23,7 @@ import com.kristinaefros.challenge.R
 import com.kristinaefros.challenge.databinding.FragmentPlacesBinding
 import com.kristinaefros.challenge.presentation.location_service.LocationService
 import com.kristinaefros.challenge.presentation.places.binder.PlacesAdapter
+import com.kristinaefros.challenge.utils.extensions.Constants.locationChannelId
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlacesFragment : Fragment() {
@@ -26,6 +32,9 @@ class PlacesFragment : Fragment() {
 
     private val viewModel: PlacesViewModel by viewModel()
     private val placesAdapter = PlacesAdapter()
+
+    private val actionGPS = "android.location.PROVIDERS_CHANGED"
+    private var geoLocationReceiver: BroadcastReceiver? = null
 
     private lateinit var locationRationaleDialog: AlertDialog
     private val requiredLocationPermissions = arrayOf(
@@ -90,6 +99,12 @@ class PlacesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         checkLocationPermissions()
+        registerGPSReceiver()
+    }
+
+    override fun onPause() {
+        geoLocationReceiver?.let { requireActivity().unregisterReceiver(it) }
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -105,7 +120,8 @@ class PlacesFragment : Fragment() {
     private fun render(screenUiModel: ScreenUiModel) {
         placesAdapter.setData(screenUiModel.placeUiModels)
         binding.apply {
-            permissionError.isVisible = screenUiModel.showPermissionError
+            errorMessage.isVisible = screenUiModel.errorAvailable
+            screenUiModel.error?.let { error -> errorMessage.setText(error) }
         }
     }
 
@@ -119,9 +135,19 @@ class PlacesFragment : Fragment() {
         }
     }
 
+    private fun checkGeoLocationEnabled() {
+        val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        viewModel.updateGpsErrorState(isGpsEnabled.not())
+    }
+
     private fun startLocationService() {
+        checkGeoLocationEnabled()
         viewModel.updatePermissionErrorState(false)
-        startLocationServiceWithAction(LocationService.ACTION_START)
+
+        if (isLocationServiceRunning().not()) {
+            startLocationServiceWithAction(LocationService.ACTION_START)
+        }
     }
 
     private fun showLocationRationale() = locationRationaleDialog.show()
@@ -130,6 +156,33 @@ class PlacesFragment : Fragment() {
 
     private fun isPermissionGranted(permission: String) =
         ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+    private fun isLocationServiceRunning(): Boolean {
+        val manager = requireActivity().getSystemService(NotificationManager::class.java)
+        for (notification in manager.activeNotifications) {
+            if (notification.notification.channelId == locationChannelId) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun registerGPSReceiver() {
+        val filter = IntentFilter()
+        filter.addAction(actionGPS)
+        if (geoLocationReceiver == null) {
+            geoLocationReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent?) {
+                    if (intent != null) {
+                        val action = intent.action
+                        if (action != null) {
+                            if (action == actionGPS) checkGeoLocationEnabled()
+                        }
+                    }
+                }
+            }
+        }
+        ContextCompat.registerReceiver(requireContext(), geoLocationReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+    }
 
     private fun startLocationServiceWithAction(serviceAction: String) {
         Intent(requireActivity().applicationContext, LocationService::class.java).apply {

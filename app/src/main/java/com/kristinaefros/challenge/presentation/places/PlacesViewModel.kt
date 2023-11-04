@@ -36,6 +36,8 @@ class PlacesViewModel(
     fun updatePermissionErrorState(show: Boolean) =
         stateFlow.update { state -> state.copy(showPermissionError = show) }
 
+    fun updateGpsErrorState(show: Boolean) = stateFlow.update { state -> state.copy(showGpsError = show) }
+
     fun stop() = launch {
         try {
             authInteractor.stopSession()
