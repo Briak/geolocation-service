@@ -10,6 +10,6 @@ object ViewModelModule {
     val module = module {
         viewModel { MainViewModel(get()) }
         viewModel { StartViewModel(get()) }
-        viewModel { PlacesViewModel(get()) }
+        viewModel { PlacesViewModel(get(), get()) }
     }
 }

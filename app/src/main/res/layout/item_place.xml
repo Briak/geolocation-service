@@ -4,8 +4,8 @@
     android:id="@+id/place_image"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:layout_margin="4dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginTop="4dp"
     android:contentDescription="@string/PLACES_SCREEN_PLACE_PICTURE"
-    android:scaleType="centerInside"
-    tools:background="@color/design_default_color_primary"
-    tools:src="@drawable/ic_launcher_foreground" />
+    android:scaleType="fitCenter"
+    tools:src="@mipmap/ic_launcher_round" />

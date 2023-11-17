@@ -1,9 +1,11 @@
 package com.kristinaefros.challenge.presentation.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kristinaefros.challenge.databinding.ActivityMainBinding
 import com.kristinaefros.challenge.presentation.common.navigation.Navigator
+import com.kristinaefros.challenge.presentation.location_service.LocationService
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         viewModel.apply {
+            startLocationServiceWithAction(LocationService.ACTION_STOP)
             unsubscribe()
         }
         super.onDestroy()
@@ -49,7 +52,17 @@ class MainActivity : AppCompatActivity() {
     private fun render(state: AuthStateModel) {
         when (state) {
             is AuthStateModel.Authorized -> navigator.openPlacesScreen()
-            else -> navigator.openStartScreen()
+            else -> {
+                startLocationServiceWithAction(LocationService.ACTION_STOP)
+                navigator.openStartScreen()
+            }
+        }
+    }
+
+    private fun startLocationServiceWithAction(serviceAction: String) {
+        Intent(applicationContext, LocationService::class.java).apply {
+            action = serviceAction
+            startService(this)
         }
     }
 }

@@ -32,9 +32,6 @@ class StartFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        viewModel.apply {
-//            screenData.removeObservers(viewLifecycleOwner)
-        }
         _binding = null
         super.onDestroyView()
     }

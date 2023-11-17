@@ -10,10 +10,10 @@ abstract class PlaceDao {
     @Query("SELECT * FROM places")
     abstract fun observeAll(): Flow<List<PlaceEntity>>
 
-    suspend fun create(latitude: Double, longitude: Double, radius: Double): PlaceEntity {
+    suspend fun create(latitude: Double, longitude: Double, radius: Float): PlaceEntity {
         val entity = PlaceEntity(latitude, longitude, radius)
-        putInternal(entity)
-        return entity
+        val id = putInternal(entity)
+        return entity.copy(id = id.toInt())
     }
 
     suspend fun updatePhoto(id: Int, photoUrl: String) {
@@ -29,7 +29,7 @@ abstract class PlaceDao {
     abstract suspend fun getInternal(id: Int): PlaceEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun putInternal(entity: PlaceEntity)
+    abstract suspend fun putInternal(entity: PlaceEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract suspend fun putAll(entity: List<PlaceEntity>)
