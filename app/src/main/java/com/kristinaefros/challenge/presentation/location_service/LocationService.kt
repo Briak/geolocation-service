@@ -64,13 +64,13 @@ class LocationService : Service(), KoinComponent {
         }
 
         locationClient
-            .getLocationUpdates(10000L)
-            .catch { error -> Timber.e(error) }
+            .getLocationUpdates(5000L)
             .onEach { location ->
                 val radius = location.accuracy / 100
                 val query = PlaceQueryModel(location.latitude, location.longitude, radius)
                 placesInteractor.createPlace(query)
             }
+            .catch { error -> Timber.e(error) }
             .launchIn(serviceScope)
     }
 

@@ -21,7 +21,7 @@ class PhotoLocationClient(
         return callbackFlow {
 
             val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, interval).apply {
-                setMinUpdateDistanceMeters(100f)
+                setMinUpdateDistanceMeters(0.1f)
                 setWaitForAccurateLocation(true)
             }.build()
 
